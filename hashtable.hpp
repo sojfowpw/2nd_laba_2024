@@ -15,62 +15,50 @@ struct hNode { // структура таблицы
 
 struct hashTable {
     hNode** table; // массив указателей на узлы
-    int currentIndex; // текущий индекс для добавления элементов
 
-    hashTable() : currentIndex(0) {
+    hashTable() {
         table = new hNode * [tableSize]; // выделение памяти под массив указателей
         for (int i = 0; i < tableSize; i++) {
             table[i] = nullptr; // инициализируем каждый элемент nullptr
         }
     }
 
-    bool isEmpty() {
-        return currentIndex == 0;
+    int func(const string& key) { // хэш-функция djb2
+        int hash = 5381;
+        for (auto ch : key) {
+            hash = (((hash << 5) + hash) + ch) % tableSize; // hash * 33 + ch
+        }
+        return hash;
     }
 
-    void insert(hashTable& ht, const string& key, const string& item) { // добавление элемента
-        if (get(ht, key) != "") {
-            cout << "Такой ключ уже есть.\n";
-            return;
-        }
-        hNode* newNode = new hNode{ key, item, table[currentIndex] }; // создаём новый первый узел для индекса
-        table[currentIndex] = newNode; // новый узел становится первым
-        currentIndex++;
+    void insert(hashTable& ht, const string& key, const string& item) { // вставка
+        int index = func(key);
+        hNode* newNode = new hNode{ key, item, table[index] }; // создаём новый узел
+        table[index] = newNode; // новый узел становится первым в цепочке
     }
 
-    string get(hashTable& ht, const string& key) { // получение значения элемента по ключу
-        for (int i = 0; i < ht.currentIndex; i++) {
-            hNode* current = ht.table[i];   // указатель на первый элемент цепочки
-            while (current) { // ищем узел
-                if (current->key == key) {
-                    return current->item; // возвращаем значение узла
-                }
-                current = current->next;
+    void update(hashTable& ht, const string& key, const string& newValue) { // обновление элемента по ключу
+        unsigned index = func(key);
+        hNode* current = table[index]; // указатель на первый элемент цепочки
+        while (current) { // ищем узел
+            if (current->key == key) {
+                current->item = newValue; // обновляем значение узла
+                return;
             }
+            current = current->next;
         }
-        return ""; // если ключ не найден, возвращаем пустую строку
     }
 
-    void del(hashTable& ht, const string& key) { // удаление элемента по ключу
-        for (int i = 0; i < ht.currentIndex; i++) {
-            hNode* current = ht.table[i]; // указатель на первый элемент цепочки
-            hNode* prev = nullptr; // новый указатель
-            while (current && current->key != key) { // поиск нужного узла
-                prev = current;         // новый указатель указывает на предыдущий узел
-                current = current->next;
+    string get(const string& key) { // получение элемента по ключу
+        int index = func(key);
+        hNode* current = table[index]; // указатель на первый элемент цепочки
+        while (current) { // ищем узел
+            if (current->key == key) {
+                return current->item; // возвращаем значение узла
             }
-            if (current == nullptr) { // узел не найден
-                continue;
-            }
-            if (prev) {
-                prev->next = current->next; // связываем предыдущий узел с последующим
-            }
-            else {
-                ht.table[i] = current->next; // если удаляемый узел был первым, обновляем начало цепочки
-            }
-            delete current;
-            return;
+            current = current->next;
         }
+        return "-1"; // если ключ не найден, возвращаем -1
     }
 
     void printHashTable(const hashTable& ht) { // вывод таблицы
@@ -84,37 +72,6 @@ struct hashTable {
                 }
                 cout << endl;
             }
-        }
-    }
-
-    void clear(hashTable& ht) { // очистка и освобождение памяти
-        for (int i = 0; i < tableSize; i++) {
-            hNode* current = ht.table[i]; // указатель на первый элемент
-            while (current != nullptr) {
-                hNode* newNode = current; // указатель на текущий узел
-                current = current->next; 
-                delete newNode; // освобождаем память
-            }
-            ht.table[i] = nullptr;
-        }
-        if (ht.table != nullptr) { // проверка на nullptr
-            delete[] ht.table; // освобождаем память, выделенную под массив указателей
-            ht.table = nullptr; // устанавливаем указатель на nullptr, чтобы избежать двойного удаления
-        }
-    }
-
-    string traverseTable(hashTable& ht) {
-        string currentKey = ht.table[0]->key;
-        string currentValue;
-        string delKey = currentKey;
-        while (true) {
-            currentValue = ht.get(ht, currentKey);
-            if (currentValue.empty()) {
-                del(ht, delKey);
-                return currentKey;
-            }
-            delKey = currentKey;
-            currentKey = currentValue;
         }
     }
 };
