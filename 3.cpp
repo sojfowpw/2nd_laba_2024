@@ -43,6 +43,7 @@ int main () {
     S.addToEnd(7);
     S.printArray();
     int target = 5;
+    cout << "Сумма: " << target << endl;
     subArrays(S, target);
     if (S.size != 0) {
         cout << "Множество не может быть поделено.\n";
