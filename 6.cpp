@@ -103,7 +103,6 @@ struct BloomFilter {
 
 int main() {
     BloomFilter bloomFilter(100, 3);
-
     bloomFilter.add("car");
     bloomFilter.add("apple");
     bloomFilter.add("shop");
@@ -111,7 +110,6 @@ int main() {
     cout << "car: " << bloomFilter.contains("car") << endl;
     cout << "apple: " << bloomFilter.contains("apple") << endl;
     cout << "shop: " << bloomFilter.contains("shop") << endl;
-    cout << "pen " << bloomFilter.contains("pen") << endl;
-
+    cout << "pen: " << bloomFilter.contains("pen") << endl;
     return 0;
 }
