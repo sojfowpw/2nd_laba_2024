@@ -86,7 +86,7 @@ int main() {
     istringstream iss(command);
     string word;
     iss >> word; // "вставка"
-    if (word != "вставка") {
+    if (word != "задачи") {
         cerr << "Некорректная команда.\n";
         return 0;
     }

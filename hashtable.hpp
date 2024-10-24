@@ -61,6 +61,14 @@ struct hashTable {
         return "-1"; // если ключ не найден, возвращаем -1
     }
 
+    int getSet(const string& key) { // получение элемента по ключу
+        if (get(key) == "-1") {
+            return -1;
+        }
+        int index = func(key);
+        return index;
+    }
+
     void printHashTable(const hashTable& ht) { // вывод таблицы
         for (int i = 0; i < tableSize; i++) {
             hNode* current = ht.table[i]; // указатель на первый элемент

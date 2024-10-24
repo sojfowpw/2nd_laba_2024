@@ -1,6 +1,8 @@
 #include "set.hpp"
+#include "hashtable.hpp"
 
 set mySet; // инициализация сета
+hashTable ht;
 
 void commands (const string& query) {
     istringstream iss(query); // поток ввода для обработки строки команды
@@ -38,7 +40,16 @@ void commands (const string& query) {
         mySet.loadFromFile(fileName);
         int value;
         iss >> value;
-        mySet.findByItem(value);
+        for (size_t i = 0; i < mySet.size; i++) {
+            ht.insert(ht, to_string(mySet.arr[i]), "0");
+        }
+        int ind = ht.getSet(to_string(value));
+        if (ind >= 0 && ind <= 100) {
+            cout << "Элемент " << value << " есть в множестве.\n";
+        }
+        else {
+            cout << "Элемента " << value << " нет во множестве.\n";
+        }
     }
     else {
         cout << "Неизвестная команда.\n";
