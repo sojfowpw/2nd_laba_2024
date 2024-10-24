@@ -51,7 +51,7 @@ struct avl {
     }
     
     tNode* insert(tNode* currentNode, int digit) { // функция вставки
-        if (!currentNode) { // создаём новый узел с заданным значением
+        /*if (!currentNode) { // создаём новый узел с заданным значением
             return new tNode(digit);
         }
         if (digit < currentNode->digit) { // если новое число меньше числа в узле
@@ -78,7 +78,7 @@ struct avl {
         if (balance < -1 && digit < currentNode->right->digit) { // если число меньше числа правого дочернего узла
             currentNode->right = rightRotate(currentNode->right);
             return leftRotate(currentNode);
-        }
+        }*/
         return currentNode;
     }
 

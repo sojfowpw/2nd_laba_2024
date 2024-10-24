@@ -1,8 +1,7 @@
 #include "set.hpp"
 #include "hashtable.hpp"
 
-set mySet; // инициализация сета
-hashTable ht;
+hashTable ht; // инициализация сета
 
 void commands (const string& query) {
     istringstream iss(query); // поток ввода для обработки строки команды
@@ -22,27 +21,23 @@ void commands (const string& query) {
     iss >> cmd;
 
     if (cmd == "SETADD") { // добавление
-        mySet.loadFromFile(fileName);
+        ht.loadFromFile(ht, fileName);
         int value;
         iss >> value;
-        mySet.addToEnd(value);
-        mySet.quickSort(0, mySet.size - 1);
-        mySet.saveToFile(fileName);
+        ht.insert(ht, to_string(value), "0");
+        ht.saveToFile(ht, fileName);
     }
-    else if (cmd == "SETDEL") { // удаление по индексу
-        mySet.loadFromFile(fileName);
-        int index;
-        iss >> index;
-        mySet.delByIndex(index);
-        mySet.saveToFile(fileName);
+    else if (cmd == "SETDEL") { // удаление по значению
+        ht.loadFromFile(ht, fileName);
+        int value;
+        iss >> value;
+        ht.del(ht, to_string(value));
+        ht.saveToFile(ht, fileName);
     }
     else if (cmd == "SET_AT") { // поиск по значению
-        mySet.loadFromFile(fileName);
+        ht.loadFromFile(ht, fileName);
         int value;
         iss >> value;
-        for (size_t i = 0; i < mySet.size; i++) {
-            ht.insert(ht, to_string(mySet.arr[i]), "0");
-        }
         int ind = ht.getSet(to_string(value));
         if (ind >= 0 && ind <= 100) {
             cout << "Элемент " << value << " есть в множестве.\n";
